@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: arquiteturaspring
+  jpa:
+    show-sql: true

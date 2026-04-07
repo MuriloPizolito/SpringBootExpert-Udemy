@@ -12,7 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Lazy // o padrão da annotacao é true. Diz que esse bean só sera instanciado quando for acionado (código).
 @Component
 // escopo - pode colocar nos beans ou em components.
-// @Scope("singleton") //padrão - singleton (onde vc tem uma instancia unica de um objeto que vai atender toda a aplicaçãp)
+// @Scope("singleton") // padrão - singleton (onde vc tem uma instancia unica de um objeto que vai atender toda a aplicaçãp)
 @Scope(BeanDefinition.SCOPE_SINGLETON) // outra forma de definir
 // @Scope("prototype") contrário do singleton, para cada usuário/requisição ele cria uma instância
 // @Scope("request") nao guarda estado, sobrevive enquanto durar a requisiçãp (aplicações web), quando finalza a requisição ele nao existe mais.
@@ -41,6 +41,5 @@ public class BeanGerenciado {
     public void setValidator(TodoValidator validator) {
         this.validator = validator;
     }
-
 
 }

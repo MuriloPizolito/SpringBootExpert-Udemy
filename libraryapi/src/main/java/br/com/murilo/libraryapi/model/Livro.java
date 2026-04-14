@@ -36,7 +36,7 @@ public class Livro {
     private BigDecimal preco;
 
     // Many = se refere a entidade atual / to / One = refere ao mapeamento
-    @ManyToOne // muitos para um - Um autor pode ter 1 ou mais livros
+    @ManyToOne//(cascade = CascadeType.ALL) // muitos para um - Um autor pode ter 1 ou mais livros / usando cascade. Operação em cascata, qualquer alteração no livro ele vai trazer o autor junto (executar na tabela de autor tbm)
     @JoinColumn(name = "id_autor") // relacionamento da coluna
     private Autor autor;
 

@@ -6,6 +6,7 @@ import br.com.murilo.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -109,5 +110,15 @@ class LivroRepositoryTest {
         livroRepository.deleteById(id);
     }
 
+    // Buscar um livro e trazer o autor junto.
+    @Test
+    @Transactional // estratégia para carregar os dados a mais que vc precisa, separa em dois select no banco, um para o livro e outro para autor somente se for necessário
+    void buscarLivroTest() {
+        UUID id = UUID.fromString("5f0e567c-a0f2-4c26-b6ca-4e499539d7fa");
+        Livro livro = livroRepository.findById(id).orElse(null);
+
+        System.out.println("Livro: " + livro.getTitulo());
+        System.out.println("Autor: " + livro.getAutor().getNome());
+    }
 
 }

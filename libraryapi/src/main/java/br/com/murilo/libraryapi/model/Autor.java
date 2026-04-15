@@ -2,6 +2,7 @@ package br.com.murilo.libraryapi.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data  // faz o getter e setter mais algumas outras funcionalidade - hashCode, toString, requiredArgsConstructor
 //@Getter
 //@Setter
+@ToString(exclude = "livros")
 public class Autor {
 
     @Id
@@ -28,8 +30,9 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false) // 50 carac. e not null
     private String nacionalidade;
 
-//    @OneToMany(mappedBy = "autor") // nome da propriedade mapeada dentro da entidade livro
-    @Transient // ignorar por enquanto essa coluna, mapeamento jpa
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // nome da propriedade mapeada dentro da entidade livro
+    // por padrão o relacionamento do ToMany já é o LAZY
+    //@Transient // ignorar por enquanto essa coluna, mapeamento jpa
     private List<Livro> livros;
 
 }

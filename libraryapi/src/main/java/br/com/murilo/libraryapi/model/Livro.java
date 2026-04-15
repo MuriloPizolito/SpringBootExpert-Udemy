@@ -2,6 +2,7 @@ package br.com.murilo.libraryapi.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Data // faz o getter e setter mais algumas outras funcionalidade - hashCode, toString, requiredArgsConstructor
 //@Getter
 //@Setter
+@ToString(exclude = "autor")
 public class Livro {
 
     @Id

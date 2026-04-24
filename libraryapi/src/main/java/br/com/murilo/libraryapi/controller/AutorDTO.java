@@ -3,9 +3,11 @@ package br.com.murilo.libraryapi.controller;
 import br.com.murilo.libraryapi.model.Autor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 // DTO - data transfer object
-public record AutorDTO(String nome,
+public record AutorDTO(UUID id,
+                       String nome,
                        LocalDate dataNascimento,
                        String nacionalidade) {
 

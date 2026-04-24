@@ -9,7 +9,8 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      # ddl-auto: update # atualiza/cria as tabelas direto pela aplicação
+      ddl-auto: none # para alterar os campos do banco manualmente, sem ser direto pela aplicação
     properties:
       hibernate.format_sql: true
 # gerando automaticamente as tabelas no banco de dados com JPA

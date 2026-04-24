@@ -3,8 +3,12 @@ package br.com.murilo.libraryapi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +18,7 @@ import java.util.UUID;
 //@Getter
 //@Setter
 @ToString(exclude = "livros")
+@EntityListeners(AuditingEntityListener.class) // diz que essa classe vai ficar escutando toda vez que tiver alguma alteração nessa entidade e vai observar se tem as anotações (CreatedDate, LastModifiedDate)
 public class Autor {
 
     @Id
@@ -34,5 +39,16 @@ public class Autor {
     // por padrão o relacionamento do ToMany já é o LAZY
     //@Transient // ignorar por enquanto essa coluna, mapeamento jpa
     private List<Livro> livros;
+
+    @CreatedDate // coloca a dataHora atual automaticamente na persistência
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
+    @LastModifiedDate // preenche com a data toda vez que houver uma atualizaçãp
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 
 }

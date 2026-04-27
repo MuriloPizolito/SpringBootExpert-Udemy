@@ -3,18 +3,20 @@ package br.com.murilo.libraryapi.validator;
 import br.com.murilo.libraryapi.exceptions.RegistroDuplicadoException;
 import br.com.murilo.libraryapi.model.Autor;
 import br.com.murilo.libraryapi.repository.AutorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class AutorValidator {
 
-    private AutorRepository autorRepository;
+    private final AutorRepository autorRepository;
 
-    public AutorValidator(AutorRepository autorRepository) {
-        this.autorRepository = autorRepository;
-    }
+//    public AutorValidator(AutorRepository autorRepository) {
+//        this.autorRepository = autorRepository;
+//    }
 
     public void validar(Autor autor) {
         if (existeAutorCadastrado(autor)){

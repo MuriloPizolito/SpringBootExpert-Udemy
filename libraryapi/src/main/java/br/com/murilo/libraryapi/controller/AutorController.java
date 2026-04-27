@@ -6,6 +6,7 @@ import br.com.murilo.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import br.com.murilo.libraryapi.exceptions.RegistroDuplicadoException;
 import br.com.murilo.libraryapi.model.Autor;
 import br.com.murilo.libraryapi.service.AutorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -18,15 +19,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/autores") // o / é opcional
+@RequiredArgsConstructor
 public class AutorController {
 
     //Camada rest - view. Trata de receber as requisições e o roteamento para o service e retornar a reposta com código adequado
 
-    private AutorService autorService;
+    private final AutorService autorService;
 
-    public AutorController(AutorService autorService) {
-        this.autorService = autorService;
-    }
+//    public AutorController(AutorService autorService) {
+//        this.autorService = autorService;
+//    }
 
     @PostMapping
     public ResponseEntity<Object> salvar(@RequestBody AutorDTO autorDTO) { // usando o dto, pois na classe autor original tem campos que não virão preenchidos na requisição do cliente

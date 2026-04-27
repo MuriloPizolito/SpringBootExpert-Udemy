@@ -5,6 +5,7 @@ import br.com.murilo.libraryapi.model.Autor;
 import br.com.murilo.libraryapi.repository.AutorRepository;
 import br.com.murilo.libraryapi.repository.LivroRepository;
 import br.com.murilo.libraryapi.validator.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor // Cria um construtor com os campos obrigatórios (com final). Gera um construtor com os campos que possuem final
 public class AutorService {
 
     // camada de serviço - parte lógica
@@ -21,11 +23,11 @@ public class AutorService {
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
 
-    public AutorService(AutorRepository autorRepository, AutorValidator validator, LivroRepository livroRepository) {
-        this.autorRepository = autorRepository;
-        this.validator = validator;
-        this.livroRepository = livroRepository;
-    }
+//    public AutorService(AutorRepository autorRepository, AutorValidator validator, LivroRepository livroRepository) {
+//        this.autorRepository = autorRepository;
+//        this.validator = validator;
+//        this.livroRepository = livroRepository;
+//    }
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);

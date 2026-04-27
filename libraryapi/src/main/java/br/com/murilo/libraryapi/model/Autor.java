@@ -35,7 +35,9 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false) // 50 carac. e not null
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // nome da propriedade mapeada dentro da entidade livro
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY // nome da propriedade mapeada dentro da entidade livro
+//         cascade = CascadeType.ALL
+    )
     // por padrão o relacionamento do ToMany já é o LAZY
     //@Transient // ignorar por enquanto essa coluna, mapeamento jpa
     private List<Livro> livros;

@@ -1,4 +1,4 @@
-package br.com.murilo.libraryapi.controller;
+package br.com.murilo.libraryapi.controller.dto;
 
 import br.com.murilo.libraryapi.model.Autor;
 
@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 // DTO - data transfer object
+// passa dados para a camada de domínio
 public record AutorDTO(UUID id,
                        String nome,
                        LocalDate dataNascimento,

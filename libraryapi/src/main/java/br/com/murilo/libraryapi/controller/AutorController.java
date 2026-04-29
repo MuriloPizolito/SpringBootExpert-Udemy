@@ -6,6 +6,7 @@ import br.com.murilo.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import br.com.murilo.libraryapi.exceptions.RegistroDuplicadoException;
 import br.com.murilo.libraryapi.model.Autor;
 import br.com.murilo.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,8 @@ public class AutorController {
 //        this.autorService = autorService;
 //    }
 
-    @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autorDTO) { // usando o dto, pois na classe autor original tem campos que não virão preenchidos na requisição do cliente
+    @PostMapping  //@Valid - valida os dados do dto, sem essa anotação a validação do dto não ocorre
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autorDTO) { // usando o dto, pois na classe autor original tem campos que não virão preenchidos na requisição do cliente
         try {
             Autor autorEntidade = autorDTO.mapearParaAutor();
             autorService.salvar(autorEntidade);
@@ -103,7 +104,7 @@ public class AutorController {
 
     @PutMapping("{id}")
     public ResponseEntity<Object> atualizar(@PathVariable("id") String id,
-                                            @RequestBody AutorDTO dto) {
+                                            @RequestBody @Valid AutorDTO dto) {
         try {
             var idAutor = UUID.fromString(id);
             Optional<Autor> autorOptional = autorService.obterPorId(idAutor);

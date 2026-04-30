@@ -7,6 +7,8 @@ import br.com.murilo.libraryapi.repository.LivroRepository;
 import br.com.murilo.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor // Cria um construtor com os campos obrigatórios (com final). Gera um construtor com os campos que possuem final
+@RequiredArgsConstructor
+// Cria um construtor com os campos obrigatórios (com final). Gera um construtor com os campos que possuem final
 public class AutorService {
 
     // camada de serviço - parte lógica
@@ -68,6 +71,22 @@ public class AutorService {
         }
 
         return autorRepository.findAll();
+    }
+
+    public List<Autor> pesquisaByExample(String nome, String nacionalidade) {
+        var autor = new Autor();
+        autor.setNome(nome);
+        autor.setNacionalidade(nacionalidade);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+//                .withIgnorePaths("id", "dataNascimento", "dataCadastro")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Autor> autorExample = Example.of(autor, matcher);
+
+        return autorRepository.findAll(autorExample);
     }
 
     public boolean possuiLivro(Autor autor) {

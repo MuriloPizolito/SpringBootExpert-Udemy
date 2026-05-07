@@ -2,6 +2,8 @@ package br.com.murilo.libraryapi.controller.common;
 
 import br.com.murilo.libraryapi.controller.dto.ErroCampo;
 import br.com.murilo.libraryapi.controller.dto.ErroResposta;
+import br.com.murilo.libraryapi.exceptions.OperacaoNaoPermitidaException;
+import br.com.murilo.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +32,24 @@ public class GlobalExceptionHandler {
                 listaErros);
     }
 
+    @ExceptionHandler(RegistroDuplicadoException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErroResposta handlerRegistroDuplicadoException(RegistroDuplicadoException e) {
+        return ErroResposta.conflito(e.getMessage());
+    }
 
+    @ExceptionHandler(OperacaoNaoPermitidaException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaException e) {
+        return ErroResposta.respostaPadrao(e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroResposta handleErrosNaoTratados(RuntimeException e) {
+        return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Ocorreu um erro inesperado. Entre em contato com a administração.",
+                List.of());
+    }
 
 }

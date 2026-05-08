@@ -4,6 +4,7 @@ import br.com.murilo.libraryapi.model.Autor;
 import br.com.murilo.libraryapi.model.GeneroLivro;
 import br.com.murilo.libraryapi.model.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * @see LivroRepositoryTest
  */
 
-public interface LivroRepository extends JpaRepository<Livro, UUID> {
+public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
 
     // Query Methods
 
@@ -28,7 +30,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     List<Livro> findByTitulo(String titulo); // busca pelo título do livro
 
     //select * from livro where isbn = ?
-    List<Livro> findByIsbn(String isbn); // busca pelo código isbn do livro
+    Optional<Livro> findByIsbn(String isbn); // busca pelo código isbn do livro
 
     // select * from livro where titulo = ? and preco = ?
     List<Livro> findByTituloAndPreco(String titulo, BigDecimal preco); // AND. É possível usar mais de um campo para busca

@@ -1,9 +1,12 @@
 package br.com.murilo.libraryapi.config;
 
+import br.com.murilo.libraryapi.security.CustomUserDetailsService;
+import br.com.murilo.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // para mudar os authorize.requestMatchers (regras de acesso) para dentro do controller
 public class SecurityConfiguration {
 
     // CSRF:
@@ -25,7 +29,6 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // deixando como padrao por enquanto
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -38,10 +41,14 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
-                    authorize.requestMatchers("/autores/**").hasRole("ADMIN"); // somente o admin tem acesso
-                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN"); // os dois podem ter acesso ao endpoint de livros
+                    authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
 
                     authorize.anyRequest().authenticated();// Todas as requisições precisam de autenticação
+
+                    // colocando isso dentro do controller
+//                    authorize.requestMatchers("/autores/**").hasRole("ADMIN"); // somente o admin tem acesso
+//                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN"); // os dois podem ter acesso ao endpoint de livros
+
                     // tem que ser o último, o que vier depois será ignorado
 
 //                    tem como definir para cada método http
@@ -60,21 +67,23 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
 
-        UserDetails user1 = User.builder()
-                .username("usuario")
-                .password(encoder.encode("123"))
-                .roles("USER")
-                .build();
+//        UserDetails user1 = User.builder()
+//                .username("usuario")
+//                .password(encoder.encode("123"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails user2 = User.builder()
+//                .username("admin")
+//                .password(encoder.encode("321"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user1, user2);
 
-        UserDetails user2 = User.builder()
-                .username("admin")
-                .password(encoder.encode("321"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user1, user2);
+        return new CustomUserDetailsService(usuarioService);
     }
 
 

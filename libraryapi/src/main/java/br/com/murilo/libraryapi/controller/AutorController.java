@@ -3,11 +3,16 @@ package br.com.murilo.libraryapi.controller;
 import br.com.murilo.libraryapi.controller.dto.AutorDTO;
 import br.com.murilo.libraryapi.controller.mappers.AutorMapper;
 import br.com.murilo.libraryapi.model.Autor;
+import br.com.murilo.libraryapi.model.Usuario;
+import br.com.murilo.libraryapi.security.SecurityService;
 import br.com.murilo.libraryapi.service.AutorService;
+import br.com.murilo.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;

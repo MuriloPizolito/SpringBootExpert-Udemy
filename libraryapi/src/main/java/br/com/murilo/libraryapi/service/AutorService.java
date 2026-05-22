@@ -2,8 +2,10 @@ package br.com.murilo.libraryapi.service;
 
 import br.com.murilo.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import br.com.murilo.libraryapi.model.Autor;
+import br.com.murilo.libraryapi.model.Usuario;
 import br.com.murilo.libraryapi.repository.AutorRepository;
 import br.com.murilo.libraryapi.repository.LivroRepository;
+import br.com.murilo.libraryapi.security.SecurityService;
 import br.com.murilo.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
 //    public AutorService(AutorRepository autorRepository, AutorValidator validator, LivroRepository livroRepository) {
 //        this.autorRepository = autorRepository;
@@ -34,6 +37,8 @@ public class AutorService {
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return autorRepository.save(autor);
     }
 

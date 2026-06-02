@@ -36,8 +36,8 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
 
                 // Configuração de formulário de login
-                .formLogin(configurer -> configurer.loginPage("/login"))
-
+//                .formLogin(configurer -> configurer.loginPage("/login"))
+                .formLogin(Customizer.withDefaults())
 
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
@@ -58,6 +58,7 @@ public class SecurityConfiguration {
 //                    authorize.requestMatchers(HttpMethod.PUT,"/autores/**").hasRole("ADMIN");
 //                    authorize.requestMatchers(HttpMethod.GET,"/autores/**").hasAnyRole("USER", "ADMIN");
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 

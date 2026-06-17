@@ -32,3 +32,13 @@ create table usuario(
 select l.titulo as nome_livro, a.nome as nome_autor
 from livro as l
 join autor as a on a.id = l.id_autor;
+
+---
+drop table usuario;
+create table usuario(
+	id uuid not null primary key,
+	login varchar(20) not null unique,
+	senha varchar(300) not null,
+	email varchar(150) not null,
+	roles varchar[]
+);

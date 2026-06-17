@@ -3,6 +3,7 @@ package br.com.murilo.libraryapi.controller;
 import br.com.murilo.libraryapi.controller.dto.UsuarioDto;
 import br.com.murilo.libraryapi.controller.mappers.UsuarioMapper;
 import br.com.murilo.libraryapi.service.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvar(@RequestBody UsuarioDto dto) {
+    public void salvar(@RequestBody @Valid UsuarioDto dto) {
         var usuario = mapper.toEntity(dto);
         service.salvar(usuario);
     }

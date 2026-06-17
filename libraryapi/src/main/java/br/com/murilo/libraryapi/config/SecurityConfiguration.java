@@ -1,6 +1,7 @@
 package br.com.murilo.libraryapi.config;
 
 import br.com.murilo.libraryapi.security.CustomUserDetailsService;
+import br.com.murilo.libraryapi.security.LoginSocialSuccessHandler;
 import br.com.murilo.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,9 @@ public class SecurityConfiguration {
     // Normalmente utilizada em aplicações Web com sessão e formulários.
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity httpSecurity,
+            LoginSocialSuccessHandler successHandler) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -37,29 +40,21 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
 
                 // Configuração de formulário de login
-//                .formLogin(configurer -> configurer.loginPage("/login"))
-                .formLogin(Customizer.withDefaults())
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login");
+                    })
 
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
 
                     authorize.anyRequest().authenticated();// Todas as requisições precisam de autenticação
-
-                    // colocando isso dentro do controller
-//                    authorize.requestMatchers("/autores/**").hasRole("ADMIN"); // somente o admin tem acesso
-//                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN"); // os dois podem ter acesso ao endpoint de livros
-
-                    // tem que ser o último, o que vier depois será ignorado
-
-//                    tem como definir para cada método http
-//                    authorize.requestMatchers(HttpMethod.POST,"/autores/**").hasAuthority("CADASTRAR_AUTOR"); // authority - permissão de executar uma tarefa, ação
-//                    authorize.requestMatchers(HttpMethod.POST,"/autores/**").hasRole("ADMIN"); // role - é um grupo de usuário
-//                    authorize.requestMatchers(HttpMethod.DELETE,"/autores/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.PUT,"/autores/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET,"/autores/**").hasAnyRole("USER", "ADMIN");
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2
+                        .loginPage("/login")
+                        .successHandler(successHandler);
+                })
                 .build();
     }
 

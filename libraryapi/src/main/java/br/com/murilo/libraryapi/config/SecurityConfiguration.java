@@ -1,8 +1,6 @@
 package br.com.murilo.libraryapi.config;
 
-import br.com.murilo.libraryapi.security.CustomUserDetailsService;
 import br.com.murilo.libraryapi.security.LoginSocialSuccessHandler;
-import br.com.murilo.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,17 +10,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) // para mudar os authorize.requestMatchers (regras de acesso) para dentro do controller
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+// para mudar os authorize.requestMatchers (regras de acesso) para dentro do controller
 public class SecurityConfiguration {
 
     // CSRF:
@@ -42,7 +37,7 @@ public class SecurityConfiguration {
                 // Configuração de formulário de login
                 .formLogin(configurer -> {
                     configurer.loginPage("/login");
-                    })
+                })
 
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
@@ -52,40 +47,30 @@ public class SecurityConfiguration {
                 })
                 .oauth2Login(oauth2 -> {
                     oauth2
-                        .loginPage("/login")
-                        .successHandler(successHandler);
+                            .loginPage("/login")
+                            .successHandler(successHandler);
                 })
+                .oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
                 .build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-//    @Bean
-    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
-
-//        UserDetails user1 = User.builder()
-//                .username("usuario")
-//                .password(encoder.encode("123"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails user2 = User.builder()
-//                .username("admin")
-//                .password(encoder.encode("321"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user1, user2);
-
-        return new CustomUserDetailsService(usuarioService);
-    }
-
+    // Configura o prefixo ROLE
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults(""); // ignora o prefixo ROLE
+    }
+
+    // SCOPE_GERENTE -> GERENTE
+    // Configura, no token JWT, o prefixo SCOPE
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        authoritiesConverter.setAuthorityPrefix("");
+
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+
+        return converter;
     }
 
 

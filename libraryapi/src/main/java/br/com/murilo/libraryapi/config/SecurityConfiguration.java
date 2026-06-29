@@ -1,5 +1,6 @@
 package br.com.murilo.libraryapi.config;
 
+import br.com.murilo.libraryapi.security.JwtCustomAuthenticationFilter;
 import br.com.murilo.libraryapi.security.LoginSocialSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -25,9 +27,7 @@ public class SecurityConfiguration {
     // Normalmente utilizada em aplicações Web com sessão e formulários.
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity httpSecurity,
-            LoginSocialSuccessHandler successHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler successHandler, JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                             .successHandler(successHandler);
                 })
                 .oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
+                .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 

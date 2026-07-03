@@ -1,5 +1,6 @@
 package br.com.murilo.libraryapi.controller.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 // DTO - data transfer object
 // passa dados para a camada de domínio
+@Schema(name = "Autor")
 public record AutorDTO(
 
         UUID id,

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/autores") // o / é opcional
 @RequiredArgsConstructor
 @Tag(name = "Autores")
+@Slf4j
 public class AutorController implements GenericController {
 
     //Camada rest - view. Trata de receber as requisições e o roteamento para o service e retornar a reposta com código adequado
@@ -49,6 +51,8 @@ public class AutorController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Autor já cadastrado.")
     })
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO autorDTO) { // usando o dto, pois na classe autor original tem campos que não virão preenchidos na requisição do cliente
+        log.info("Cadastrando novo autor: {}", autorDTO.nome());
+
         Autor autor = mapper.toEntity(autorDTO);
         autorService.salvar(autor);
 
@@ -94,6 +98,8 @@ public class AutorController implements GenericController {
             @ApiResponse(responseCode = "404", description = "Autor não encontrado.")
     })
     public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
+        log.info("Deletando autor de id: {}", id);
+
         var idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = autorService.obterPorId(idAutor);
 
